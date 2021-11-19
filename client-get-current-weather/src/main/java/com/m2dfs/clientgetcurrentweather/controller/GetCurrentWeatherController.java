@@ -26,7 +26,7 @@ public class GetCurrentWeatherController {
         String cityCode = getCityCode(cityName);
 
         String response = restTemplate.exchange(
-                "http://localhost:8181/currentWeather/"+cityCode,
+                "http://weather-service/currentWeather/"+cityCode,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<String>() {},
