@@ -1,6 +1,7 @@
 package com.m2dfs.clientgetcurrentweather.controller;
 
 import com.google.gson.Gson;
+import com.m2dfs.clientgetcurrentweather.delegate.CurrentWeatherServiceDelegate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -22,7 +23,7 @@ import java.util.Map;
 public class GetCurrentWeatherController {
 
     @Autowired
-    RestTemplate restTemplate;
+    CurrentWeatherServiceDelegate currentWeatherServiceDelegate;
 
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Suceess|OK"),
@@ -32,37 +33,11 @@ public class GetCurrentWeatherController {
     @RequestMapping(value = "/getCurrentWeatherOfCity/{cityName}", method = RequestMethod.GET)
     public String getWeather(@PathVariable String cityName) {
 
-        String cityCode = getCityCode(cityName);
-
-        String response = restTemplate.exchange(
-                "http://weather-service/currentWeather/"+cityCode,
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<String>() {},
-                cityName).getBody();
-        return response;
+        System.out.println("Calling current weather service to get Data ...");
+        //return currentWeatherServiceDelegate.callCurrentWeatherServiceAndGetData(cityName);
+        return currentWeatherServiceDelegate.callCurrentWeatherServiceAndGetData(cityName);
     }
 
-    public String getCityCode(String cityName) {
-        String response = restTemplate.exchange(
-                "http://localhost:8282/citydetails/{cityName}",
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<String>() {},
-                cityName).getBody();
 
-        // parse JSON and get only the code from city Infos
-        String jsonRes = response;
-        jsonRes = jsonRes.substring(1, jsonRes.length() - 1);
-        Map jsonObj = new Gson().fromJson(jsonRes, Map.class);
-        String cityCode = (String) jsonObj.get("Key");
-
-        return cityCode;
-    }
-
-    @Bean
-    RestTemplate restTemplate() {
-        return new RestTemplate();
-    }
 }
 

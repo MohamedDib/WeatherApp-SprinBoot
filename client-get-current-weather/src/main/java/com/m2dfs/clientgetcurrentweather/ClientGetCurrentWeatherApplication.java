@@ -6,6 +6,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
 @EnableEurekaClient
+
 public class ClientGetCurrentWeatherApplication {
 
 	public static void main(String[] args) {
